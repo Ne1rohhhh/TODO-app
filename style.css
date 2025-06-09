@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap');
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "PT Sans"
+}
+
+
+header {
+    margin-bottom: 24px;
+    
+    h1 {
+        text-align: center;
+    }
+}
+
+main {
+    max-width: 800px;
+    margin: 0 16px;
+}
+
+.add-todo-input {
+    flex-grow: 2;
+    padding: 8px;
+}
+
+.add-todo-btn {
+    padding: 8px 12px;
+}
+
+.add-input-container {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 12px;
+}
+
+.todo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 24px;
+    margin-bottom: 12px;
+}
+
+.todo-checkbox {
+    width: 26px;
+    height: 26px;
+    margin-top: 14px;
+    margin-left: 8px;
+    cursor: pointer;
+    accent-color: #4CAF50;
+}
+
+.todo-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.todo-text {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.todo-creation-date {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.remove-todo-btn {
+    width: 28px;
+    height: 28px;
+    padding: 14px;
+    background-repeat: no-repeat;
+    background-size: 24px;
+    background-position: center;
+    cursor: pointer;
+    background-image: url(./delete.svg);
+    margin-top: 12px;
+    margin-right: 8px;
+    background-color: tomato;
+    border: 1px solid #343434;
+
+}
+
+.todo:has(.todo-checkbox:checked) {
+    background-color: #6acb8e;
+}
+
+.todo-checkbox:checked ~ .todo-info .todo-text {
+    text-decoration: line-through;
+}
