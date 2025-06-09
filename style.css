@@ -8,7 +8,6 @@
     font-family: "PT Sans"
 }
 
-
 header {
     margin-bottom: 24px;
     
@@ -18,17 +17,19 @@ header {
 }
 
 main {
-    max-width: 800px;
+    max-width: 870px;
     margin: 0 16px;
 }
 
 .add-todo-input {
     flex-grow: 2;
-    padding: 8px;
+    padding: 14px;
+    max-height: 48px;
 }
 
 .add-todo-btn {
     padding: 8px 12px;
+    border: 1px solid #464646;
 }
 
 .add-input-container {
@@ -37,12 +38,61 @@ main {
     margin-bottom: 12px;
 }
 
+.search-input {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-bottom: 12px;
+}
+
+.search-todo-input {
+    flex-grow: 2;
+    padding: 14px;
+    max-height: 48px;
+}
+
+.search-todo-btn {
+    padding: 16px 22px;
+    background-repeat: no-repeat;
+    background-size: 24px;
+    background-position: center;
+    cursor: pointer;
+    background-image: url(./img/search.svg);
+    border: 1px solid #464646;
+}
+
+input:hover, input:focus, input:active {
+    outline: none;
+    border: 2px solid #cd7801;
+    cursor: text;
+}
+
+input:hover, .search-todo-btn:hover, .add-todo-btn:hover {
+    cursor: pointer;
+}
+
+.filter-btn {
+    padding: 16px 22px;
+    background-repeat: no-repeat;
+    background-size: 24px;
+    background-position: center;
+    cursor: pointer;
+    background-image: url(./img/filter.svg);
+    border: 1px solid #464646;
+}
+
+.todo-list-container {
+    max-width: 804px;
+}
+
 .todo {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    gap: 24px;
+    gap: 4px;
     margin-bottom: 12px;
+    background-color: #b7e2ee;
+    width: 100%;
 }
 
 .todo-checkbox {
@@ -50,6 +100,7 @@ main {
     height: 26px;
     margin-top: 14px;
     margin-left: 8px;
+    margin-right: 12px;
     cursor: pointer;
     accent-color: #4CAF50;
 }
@@ -70,6 +121,21 @@ main {
     font-weight: 400;
 }
 
+.change-todo-btn {
+    width: 28px;
+    height: 28px;
+    padding: 14px;
+    background-repeat: no-repeat;
+    background-size: 24px;
+    background-position: center;
+    cursor: pointer;
+    background-image: url(./img/change.svg);
+    margin-top: 12px;
+    margin-right: 8px;
+    background-color: #f4ec20;
+    border: 1px solid #767676;
+}
+
 .remove-todo-btn {
     width: 28px;
     height: 28px;
@@ -78,12 +144,11 @@ main {
     background-size: 24px;
     background-position: center;
     cursor: pointer;
-    background-image: url(./delete.svg);
+    background-image: url(./img/delete.svg);
     margin-top: 12px;
     margin-right: 8px;
     background-color: tomato;
     border: 1px solid #343434;
-
 }
 
 .todo:has(.todo-checkbox:checked) {
@@ -93,3 +158,4 @@ main {
 .todo-checkbox:checked ~ .todo-info .todo-text {
     text-decoration: line-through;
 }
+
