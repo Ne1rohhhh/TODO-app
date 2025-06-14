@@ -6,8 +6,7 @@ export const getTodosFromLocalStorage = () => {
     return JSON.parse(localStorage.getItem("todos")) || [];
 }
 
-const now = new Date();
-export const formattedDate = now.toLocaleString('uk-UA', {
+export const formattedDate = () => new Date().toLocaleString('uk-UA', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',

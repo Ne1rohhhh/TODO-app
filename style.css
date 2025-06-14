@@ -1,5 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap');
 
+button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background-color: #dcdcdc;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 
 * {
     margin: 0;
@@ -25,9 +40,11 @@ main {
     flex-grow: 2;
     padding: 14px;
     max-height: 48px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
 }
 
-.add-todo-btn {
+.add-todo-btn, .clear-all-btn {
     padding: 8px 12px;
     border: 1px solid #464646;
 }
@@ -45,10 +62,72 @@ main {
     margin-bottom: 12px;
 }
 
+.search-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
 .search-todo-input {
-    flex-grow: 2;
-    padding: 14px;
+    width: 100%;
+    padding: 14px 48px 14px 14px; /* додано padding справа для стрілки */
     max-height: 48px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.filter-options-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  background-image: url(./img/dropdown.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.filter-options-btn:hover {
+  opacity: 1;
+}
+
+.sort-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 180px;
+  list-style: none;
+  padding: 6px 0;
+  margin: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: none;
+  z-index: 100;
+}
+
+.sort-dropdown li {
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.sort-dropdown li:hover {
+  background-color: #f0f0f0;
+}
+
+.search-input-wrapper.show-dropdown .sort-dropdown {
+  display: block;
 }
 
 .search-todo-btn {
@@ -136,6 +215,11 @@ input:hover, .search-todo-btn:hover, .add-todo-btn:hover {
     border: 1px solid #767676;
 }
 
+.change-todo-btn:hover {
+    background-color: #f4ec20;
+    border: 1px solid #767676;
+}
+
 .remove-todo-btn {
     width: 28px;
     height: 28px;
@@ -147,6 +231,11 @@ input:hover, .search-todo-btn:hover, .add-todo-btn:hover {
     background-image: url(./img/delete.svg);
     margin-top: 12px;
     margin-right: 8px;
+    background-color: tomato;
+    border: 1px solid #343434;
+}
+
+.remove-todo-btn:hover {
     background-color: tomato;
     border: 1px solid #343434;
 }

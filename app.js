@@ -1,39 +1,129 @@
 import { saveTodosIntoLocalStorage, getTodosFromLocalStorage, formattedDate } from "./utils.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const addTodoInput = document.querySelector("[data-add-todo-input]");
-  const addTodoBtn = document.querySelector("[data-add-todo-button]");
-  const searchInput = document.querySelector("[data-search-todo-input]");
-  const searchBtn = document.querySelector("[data-search-todo-button]");
-  const todosContainer = document.querySelector("[data-todo-container]");
-  const todoTemplate = document.querySelector("[data-todo-template]");
+const addTodoInput = document.querySelector("[data-add-todo-input]");
+const addTodoBtn = document.querySelector("[data-add-todo-button]");
+const clearAllBtn = document.querySelector("[data-clear-all-todos-button]");
+const searchInput = document.querySelector("[data-search-todo-input]");
+const searchBtn = document.querySelector("[data-search-todo-button]");
+const todosContainer = document.querySelector("[data-todo-container]");
+const todoTemplate = document.querySelector("[data-todo-template]");
 
-  if (!todoTemplate) {
-    console.error("Template not found!");
+export let filteredArray = [];
+export let isFiltered = false;
+export let todoList = getTodosFromLocalStorage();
+
+export const setIsFiltered = (val) => {
+  isFiltered = val;
+};
+
+export const updateTodoList = (newArray) => {
+  todoList = newArray;
+  saveTodosIntoLocalStorage(todoList);
+};
+
+export const updateFilteredArray = (newArray) => {
+  filteredArray = newArray;
+};
+
+export const renderTodos = () => {
+  todosContainer.innerHTML = "";
+  const arrToRender = isFiltered ? filteredArray : todoList;
+
+  if (arrToRender.length === 0) {
+    todosContainer.innerHTML = "<h2>No tasks...</h2>";
     return;
   }
 
-  let filteredArray = [];
-  let isFiltered = false;
+  arrToRender.forEach((todo) => {
+    const todoElement = createTodoLayout(todo);
+    todosContainer.append(todoElement);
+  });
+};
 
-  let todoList = getTodosFromLocalStorage();
-  console.log(todoList);
+const createTodoLayout = (todo) => {
+  const todoElement = document.importNode(todoTemplate.content, true);
+  const checkbox = todoElement.querySelector("[data-todo-checkbox]");
+  const todoText = todoElement.querySelector("[data-todo-text]");
+  const todoDate = todoElement.querySelector("[data-todo-date]");
+  const removeTodoBtn = todoElement.querySelector("[data-remove-todo-button]");
+  const changeTodoBtn = todoElement.querySelector("[data-change-todo-button]");
 
+  checkbox.checked = todo.completed;
+  checkbox.addEventListener("change", (e) => {
+    const updatedList = todoList.map((t) => {
+      if (t.id === todo.id) {
+        return { ...t, completed: e.target.checked };
+      }
+      return t;
+    });
+    updateTodoList(updatedList);
+
+    if (isFiltered) {
+      const query = searchInput.value.toLowerCase().trim();
+      const filtered = updatedList.filter((todo) =>
+        todo.text.toLowerCase().includes(query)
+      );
+      updateFilteredArray(filtered);
+    }
+
+    renderTodos();
+  });
+
+  todoText.textContent = todo.text;
+  todoDate.textContent = todo.createdAt;
+
+  removeTodoBtn.addEventListener("click", () => {
+    const updatedList = todoList.filter((t) => t.id !== todo.id);
+    updateTodoList(updatedList);
+
+    if (isFiltered) {
+      const query = searchInput.value.toLowerCase().trim();
+      const filtered = updatedList.filter((todo) =>
+        todo.text.toLowerCase().includes(query)
+      );
+      updateFilteredArray(filtered);
+    }
+
+    renderTodos();
+  });
+
+  if (changeTodoBtn) {
+    changeTodoBtn.addEventListener("click", () => {
+      const newText = prompt("Введіть новий текст задачі", todo.text);
+      if (newText && newText.trim()) {
+        const updatedList = todoList.map((t) =>
+          t.id === todo.id ? { ...t, text: newText.trim() } : t
+        );
+        updateTodoList(updatedList);
+        renderTodos();
+      }
+    });
+  }
+
+  return todoElement;
+};
+
+document.addEventListener("DOMContentLoaded", () => {
   addTodoBtn.addEventListener("click", () => {
     if (addTodoInput.value.trim()) {
       const newTodo = {
         id: Date.now(),
         text: addTodoInput.value.trim(),
         completed: false,
-        createdAt: formattedDate,
+        createdAt: formattedDate(),
       };
 
-      todoList.push(newTodo);
+      updateTodoList([...todoList, newTodo]);
       addTodoInput.value = "";
-      saveTodosIntoLocalStorage(todoList);
-      isFiltered = false;
+      setIsFiltered(false);
       renderTodos();
     }
+  });
+
+  clearAllBtn.addEventListener("click", () => {
+    updateTodoList([]);
+    setIsFiltered(false);
+    renderTodos();
   });
 
   let debounceTimer;
@@ -42,15 +132,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const query = searchInput.value.toLowerCase().trim();
 
     if (query === "") {
-      isFiltered = false;
+      setIsFiltered(false);
       renderTodos();
       return;
     }
 
-    filteredArray = todoList.filter((todo) =>
+    const filtered = todoList.filter((todo) =>
       todo.text.toLowerCase().includes(query)
     );
-    isFiltered = true;
+    updateFilteredArray(filtered);
+    setIsFiltered(true);
     renderTodos();
   });
 
@@ -59,79 +150,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const query = searchInput.value.toLowerCase().trim();
 
     if (query === "") {
-      isFiltered = false;
+      setIsFiltered(false);
       renderTodos();
       return;
     }
 
     debounceTimer = setTimeout(() => {
-      filteredArray = todoList.filter((todo) =>
+      const filtered = todoList.filter((todo) =>
         todo.text.toLowerCase().includes(query)
       );
-      isFiltered = true;
+      updateFilteredArray(filtered);
+      setIsFiltered(true);
       renderTodos();
     }, 500);
   });
-
-  const createTodoLayout = (todo) => {
-    const todoElement = document.importNode(todoTemplate.content, true);
-
-    const checkbox = todoElement.querySelector("[data-todo-checkbox]");
-    checkbox.checked = todo.completed;
-
-    checkbox.addEventListener("change", (e) => {
-      todoList = todoList.map((t) => {
-        if (t.id === todo.id) {
-          t.completed = e.target.checked;
-        }
-        return t;
-      });
-      saveTodosIntoLocalStorage(todoList);
-      renderTodos();
-    });
-
-    const todoText = todoElement.querySelector("[data-todo-text]");
-    todoText.textContent = todo.text;
-
-    const todoDate = todoElement.querySelector("[data-todo-date]");
-    todoDate.textContent = todo.createdAt;
-
-    const removeTodoBtn = todoElement.querySelector("[data-remove-todo-button]");
-    removeTodoBtn.addEventListener("click", () => {
-      todoList = todoList.filter((t) => t.id !== todo.id);
-      saveTodosIntoLocalStorage(todoList);
-      renderTodos();
-    });
-
-    // Додаємо кнопку зміни тексту (якщо є в шаблоні)
-    const changeTodoBtn = todoElement.querySelector("[data-change-todo-button]");
-    if (changeTodoBtn) {
-      changeTodoBtn.addEventListener("click", () => {
-        const newText = prompt("Введіть новий текст задачі", todo.text);
-        if (newText && newText.trim()) {
-          todo.text = newText.trim();
-          saveTodosIntoLocalStorage(todoList);
-          renderTodos();
-        }
-      });
-    }
-
-    return todoElement;
-  };
-
-  const renderTodos = () => {
-    todosContainer.innerHTML = "";
-    const arrToRender = isFiltered ? filteredArray : todoList;
-    if (arrToRender.length === 0) {
-      todosContainer.innerHTML = "<h2>No tasks...</h2>";
-      return;
-    }
-
-    arrToRender.forEach((todo) => {
-      const todoElement = createTodoLayout(todo);
-      todosContainer.append(todoElement);
-    });
-  };
 
   renderTodos();
 });

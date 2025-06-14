@@ -12,12 +12,23 @@
     </header>
     <main>
         <section class="add-input-container">
-            <input type="text" placeholder="add-todo"
-            class="add-todo-input" data-add-todo-input>
-            <button class="add-todo-btn" data-add-todo-button>add</button>
+            <input type="text" placeholder="add-todo" class="add-todo-input" data-add-todo-input>
+            <button class="add-todo-btn" data-add-todo-button>add task</button>
+            <button class="clear-all-btn" data-clear-all-todos-button>clear all</button>
         </section>
         <section class="search-input">
-            <input type="text" placeholder="search" class="search-todo-input" data-search-todo-input>
+            <div class="search-input-wrapper">
+                <input type="text" placeholder="search" class="search-todo-input" data-search-todo-input>
+                <button class="filter-options-btn" data-filter-options-btn></button>
+                
+                <ul class="sort-dropdown" data-sort-dropdown>
+                    <li class="dropdown-item" data-sort="newest">Найновіші</li>
+                    <li class="dropdown-item" data-sort="oldest">Найстаріші</li>
+                    <li class="dropdown-item" data-sort="completed">Виконані</li>
+                    <li class="dropdown-item" data-sort="not-completed">Не виконані</li>
+                </ul>
+
+            </div>
             <button class="search-todo-btn" data-search-todo-button></button>
         </section>
 
@@ -39,5 +50,6 @@
     </main>
     <script type="module" src="app.js"></script>
     <script type="module" src="utils.js"></script>
+    <script type="module" src="dropdown.js"></script>
 </body>
 </html>
